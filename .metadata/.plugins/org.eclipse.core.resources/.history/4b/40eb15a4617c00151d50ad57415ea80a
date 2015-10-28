@@ -1,0 +1,53 @@
+package ticTacToe;
+
+import java.util.Scanner;
+
+public class Game {
+
+	private Player playerA;
+	private Player playerB;
+	private Board board;
+	private Player currentPlayer;
+
+	public Game(String name1, char symbol1, String name2, char symbol2, int size) {
+		this.playerA = new Player(name1, symbol1);
+		this.playerB = new Player(name2, symbol2);
+		this.board = new Board(size);
+		this.currentPlayer = this.playerA;
+	}
+
+	public void playGame() {
+		System.out.println(this.board.toString());
+		int[] nextMove = this.nextMove();
+
+		// board has updated because no win or draw
+		while (this.updateBoard(nextMove, this.currentPlayer.getSymbol())) {
+
+		}
+		System.out.println("something");
+	}
+
+	public boolean updateBoard(int[] nextMove, char symbol) {
+		if (this.currentPlayer.equals(this.playerA)) {
+			this.currentPlayer = this.playerB;
+		} else {
+			this.currentPlayer = this.playerB;
+		}
+		return this.board.updateBoard(nextMove, symbol);
+	}
+
+	public int[] nextMove() {
+		Scanner keyboard = new Scanner(System.in);
+		int[] move = new int[2];
+		do {
+			System.out.println("Enter the row of your next move:");
+			move[0] = keyboard.nextInt();
+		} while (!this.board.moveIsValid(move[0] - 1));
+
+		do {
+			System.out.println("Enter the column of your next move:");
+		} while (this.board.moveIsValid(move[1] - 1));
+		move[1] = keyboard.nextInt();
+		return move;
+	}
+}

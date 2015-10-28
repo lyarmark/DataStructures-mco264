@@ -1,0 +1,13 @@
+package ticTacToe;
+
+import java.util.Scanner;
+
+public class TicTacToe {
+
+	Scanner keyboard = new Scanner(System.in);
+	System.out.println("Enter a name for player 1:");
+	String name1 = keyboard.nextLine();
+	System.out.println("Enter a name for player 2:");
+	String name2 = keyboard.nextLine();
+	Game newGame = new Game(name1, name2);
+}

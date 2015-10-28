@@ -1,0 +1,52 @@
+package ticTacToe;
+
+public class Board {
+	private char[][] board;
+
+	public Board(int size) {
+		this.board = new char[size][size];
+	}
+
+	public boolean updateBoard(int[] nextMove, char symbol) {
+		if (this.winner(nextMove)) || this.draw()) {
+			return false;
+		} else {
+			this.board[nextMove[0]][nextMove[1]] = symbol;
+			return true;
+		}
+	}
+
+	public boolean winner(int[] nextMove) {
+		for (int row = nextMove[0]; row < this.board.length; row++) {
+
+		}
+		return false;
+	}
+
+	public boolean draw() {
+		return false;
+	}
+
+	public boolean moveIsValid(int[] validate) {
+		if ((validate[0] >= 0) && (validate[0] < this.board.length) && (validate[1] >= 0)
+				&& (validate[1] < this.board.length)) {
+			if (this.board[validate[0]][validate[1]] == '\u0000') {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		System.out.print("-------------\n");
+		for (int row = 0; row < this.board.length; row++) {
+			for (int column = 0; column < this.board[row].length; column++) {
+				System.out.print("| " + this.board[row][column] + " ");
+			}// end column for
+			System.out.println("|\n-------------");
+		}// end row for
+		return buffer.toString();
+	}
+}

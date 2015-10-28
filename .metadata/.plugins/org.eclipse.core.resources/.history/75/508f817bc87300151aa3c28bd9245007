@@ -1,0 +1,103 @@
+package randomAccessStudentDataCW;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class StudentsIndex implements Serializable {
+	private static final long serialVersionUID = 1L;
+	private ArrayList<StudentIndexRec> index;
+
+	/**
+	 * set up an index for the first time
+	 */
+	public StudentsIndex() {
+		this.index = new ArrayList<StudentIndexRec>();
+	}
+
+	/**
+	 * @param studentID
+	 *
+	 * @param fileLocation
+	 * @throws Exception
+	 *             if duplicate
+	 */
+	public void addStudentToIndex(Integer studentID, Long fileLocation) throws DuplicateDataException {
+		StudentIndexRec temp = new StudentIndexRec(studentID, fileLocation);
+		if (hasStudent(studentID)) {
+			throw new DuplicateDataException();
+		}
+		index.add(temp);
+		Collections.sort(this.index);
+	}
+
+	/**
+	 *
+	 * @param studentID
+	 * @return Long - location of record in the data file
+	 * @throws NotFoundException
+	 */
+
+	public Long findStudentLocation(Integer studentID) throws NotFoundException {
+		for (StudentIndexRec s : this.index) {
+			if (s.getStudentID().compareTo(studentID) == 0) {
+				return s.getFileLocation();
+			}
+		}
+		// student not found
+		throw new NotFoundException();
+	}
+
+	/**
+	 *
+	 * @param studentID
+	 * @return element number of the studentindexrec in the array
+	 * @throws NotFoundException
+	 */
+	private int findStudent(Integer studentID) throws NotFoundException {
+		for (StudentIndexRec student: this.index) {
+			if (student.getStudentID().compareTo(studentID) == 0) {
+				return student.
+			}
+		}
+	}
+
+	/**
+	 *
+	 * @param studentID
+	 * @return true if studentid appears in the index array
+	 */
+
+	public boolean hasStudent(Integer studentID) {
+		return this.index.contains(studentID);
+	}
+
+	public void removeStudent(Integer studentID) {
+		this.index.remove(findStudent(studentID));
+	}
+
+	private void sortIndex() {
+	}
+
+	{
+
+	}
+
+	private int findStudentBinSearch(Integer studentID) {
+		int low = 0;
+		int high = this.index.size() - 1;
+		while (high >= low) {
+			int middle = (low + high) / 2;
+			if (this.index.get(middle).getStudentID() == studentID) {
+				return middle;
+			}
+			if (this.index.get(middle).getStudentID() < studentID) {
+				low = middle + 1;
+			}
+			if (this.index.get(middle).getStudentID() > studentID) {
+				high = middle - 1;
+			}
+		}
+	}
+	throw new NotFoundException();
+}

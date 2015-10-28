@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move 2 elements to &apos;MCO 264 Data Structures/src/pharmacy&apos;&#x0D;&#x0A;- Original project: &apos;Pharmacy&apos;&#x0D;&#x0A;- Destination element: &apos;MCO 264 Data Structures/src/pharmacy&apos;&#x0D;&#x0A;- Original elements:&#x0D;&#x0A;     pharmacy.txt&#x0D;&#x0A;     Programming Assignment 1 Fall 2015.docx&#x0D;&#x0A;- Update references to refactored element" description="Move files" destination="=MCO 264 Data Structures/src&lt;pharmacy" element1="pharmacy.txt" element2="Programming Assignment 1 Fall 2015.docx" files="2" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1442459244031" units="0" version="1.0"/>
+</session>
