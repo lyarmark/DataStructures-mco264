@@ -117,18 +117,11 @@ public class IncompleteEvalExpression {
 
 	public Double evalPostFix(String postFixExpression) {
 
-		// pseudocode:
-		/*
-		 * this method receives a string of the mathematical expression in
-		 * postfix form loop through the characters in the string
-		 */
 		StringTokenizer postFix = new StringTokenizer(postFixExpression);
 
 		String chara;
-		String topOfStack;
 		char operator;
 		Double value = null; // will contain answer
-		final String BLANK = " ";
 
 		while (postFix.hasMoreElements()) {
 			chara = postFix.nextToken();
@@ -138,28 +131,28 @@ public class IncompleteEvalExpression {
 				switch (operator) {
 				case '+': {
 					value = Double.parseDouble(opStack.pop());
-					Double temp = value + Double.parseDouble(opStack.pop());
+					Double temp = Double.parseDouble(opStack.pop()) + value;
 					opStack.push(temp.toString());
 					break;
 
 				}
 				case '-': {
 					value = Double.parseDouble(opStack.pop());
-					Double temp = value - Double.parseDouble(opStack.pop());
+					Double temp =  Double.parseDouble(opStack.pop()) - value;
 					opStack.push(temp.toString());
 					break;
 
 				}
 				case '*': {
 					value = Double.parseDouble(opStack.pop());
-					Double temp = value * Double.parseDouble(opStack.pop());
+					Double temp =  Double.parseDouble(opStack.pop()) * value;
 					opStack.push(temp.toString());
 					break;
 				}
 				case '/': {
 
 					value = Double.parseDouble(opStack.pop());
-					Double temp = value / Double.parseDouble(opStack.pop());
+					Double temp =  Double.parseDouble(opStack.pop()) / value;
 					opStack.push(temp.toString());
 					break;
 				}
@@ -169,50 +162,6 @@ public class IncompleteEvalExpression {
 			}
 		}
 		return Double.parseDouble(opStack.pop());
-
-		/*
-		 * 
-		 * push them onto the stack until you hit an operator when you hit an
-		 * operator, pop the last 2 values of the stack and calculate them using
-		 * the operator push the result onto the stack continue looping through
-		 * the string
-		 * 
-		 * 
-		 * while (postFix.hasMoreElements()) {
-		 * 
-		 * if (token.matches("[\\+-/\\*()]")) { operator = token.charAt(0); //
-		 * this is a mathematical operator or a parenthesis switch (operator) {
-		 * case '(': opStack.push(token); break; case ')': for (;;) { try {
-		 * topToken = opStack.pop(); if (topToken.charAt(0) == '(') { break; }
-		 * else { postFixExp.append(BLANK); // make sure to append // the blank
-		 * for the // next time you // evaluate postFixExp.append(topToken); } }
-		 * catch (EmptyStackException e) { // doesn't have a matching open
-		 * parenthesis throw new InvalidExpressionException();
-		 * 
-		 * } } break;
-		 * 
-		 * case '+': case '-': case '*': case '/': // what you do with operator
-		 * depends whats on the top // use peek() for (;;) { char topTok; if
-		 * (!opStack.empty()) { topTok = opStack.peek().charAt(0); } else {
-		 * topTok = ' '; // set it to blank } // current has higher precedence
-		 * if (opStack.empty() || (topTok == '(') || (((operator == '*') ||
-		 * (operator == '/')) && ((topTok == '+') || (topTok == '-')))) {
-		 * opStack.push(token); break; // current has lower precedence } else {
-		 * topToken = opStack.pop(); postFixExp.append(BLANK + topToken);
-		 * 
-		 * } } break; }
-		 * 
-		 * } else { opStack.push(token); }
-		 * 
-		 * } while (!opStack.empty()) { // pop what is left in the operator
-		 * stack topToken = opStack.pop(); if (topToken.charAt(0) != '(') {
-		 * postFixExp.append(BLANK + topToken); } else { // found an unmatched (
-		 * parenthesis throw new InvalidExpressionException();
-		 * 
-		 * } }
-		 * 
-		 * return Double.parseDouble(postFixExp.toString());
-		 */
 	}
 
 	public static void main(String[] args) {
