@@ -18,9 +18,7 @@ public class UseArrayQueue {
 		catch(QueueFullException e){
 		  try{
 			  while (true){
-				  System.out.println("Serving " + myList.peek());
-				  myList.dequeue();
-				  
+				  System.out.println("Serving " + myList.dequeue());
 				  
 			  }
 			  

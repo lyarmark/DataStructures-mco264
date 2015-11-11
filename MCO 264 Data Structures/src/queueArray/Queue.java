@@ -86,12 +86,13 @@ public class Queue<T> {
 		items.removeAll();
 
 	}
-
-	// public T peek() throws QueueEmptyException {
-	// if (!isEmpty()) {
-	// return items[front];
-	// } else
-	// throw new QueueEmptyException();
-	//
-	// }
+/*
+	 public T peek() throws QueueEmptyException {
+	 if (!isEmpty()) {
+	 return items[front];
+	 } else
+	 throw new QueueEmptyException();
+	
+	 }
+	 */
 }
