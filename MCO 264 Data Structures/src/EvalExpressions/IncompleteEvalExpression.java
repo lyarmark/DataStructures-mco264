@@ -161,6 +161,9 @@ public class IncompleteEvalExpression {
 				opStack.push(chara);
 			}
 		}
+		if (!opStack.empty()) {
+			throw new InvalidExpressionException();
+		}
 		return Double.parseDouble(opStack.pop());
 	}
 
