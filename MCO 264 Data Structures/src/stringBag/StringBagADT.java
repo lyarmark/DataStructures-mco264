@@ -70,7 +70,10 @@ public class StringBagADT implements StringBagInterface {
 			// it
 			// and keep the array contiguous
 			Random ran = new Random();
-			int remove = ran.nextInt(lastIndex);
+			int remove = 0;
+			if (lastIndex != 0){
+				remove = ran.nextInt(lastIndex);
+			}
 			String s = bagArray[remove];
 			for (int i = remove; i < lastIndex; i++) {
 				bagArray[i] = bagArray[i + 1];

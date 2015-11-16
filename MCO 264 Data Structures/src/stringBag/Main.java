@@ -22,6 +22,9 @@ public class Main {
 			// test remove() and isEmpty()
 			System.out.println(bag.remove() + " has been removed from the bag.");
 
+			System.out.println(bag.remove() + " has been removed from the bag");
+			System.out.println(bag.remove() + " has been removed from the bag");
+
 			System.out.println("The array contains: " + bag.toString());
 
 			bag.insert("grape"); // test isFull()
