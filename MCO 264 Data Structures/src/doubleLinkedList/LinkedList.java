@@ -9,31 +9,31 @@ public class LinkedList<T extends Comparable<T> & Serializable> {
 	private static final long serialVersionUID = 1L;
 
 	public ReverseIterator<T> iter;
-	private DoubleLinkNode<T> tail;
+	private DoubleLinkNode<T> head;
 
 	public LinkedList() {
-		this.tail = null;
-		this.iter = new ReverseIterator<T>(tail);
+		this.head = null;
+		this.iter = new ReverseIterator<T>(head);
 	}
 
 	public void add(T data) {
 		DoubleLinkNode<T> currentNode;
-		DoubleLinkNode<T> prevNode;
-		if (tail == null) {
-			tail = new DoubleLinkNode<T>(data);
+
+		if (head == null) {
+			head = new DoubleLinkNode<T>(data);
 		}
 		else {			
 			DoubleLinkNode<T> newNode = new DoubleLinkNode<T>(data);
-			currentNode = prevNode = tail;
-			while(currentNode != null && data.compareTo(currentNode.getData()) < 0) {
-				prevNode = currentNode;
+			currentNode = head;
+			while(currentNode != null && data.compareTo(currentNode.getData()) > 0) {
+				currentNode.setPrev(currentNode);
 				currentNode = currentNode.getNext();
 			}
-			if (currentNode == tail) {
-				newNode.setNext(tail);
-				tail = newNode;
+			if (currentNode == head) {
+				newNode.setNext(head);
+				head = newNode;
 			} else {
-				prevNode.setNext(newNode);
+				currentNode.getPrev().setNext(newNode);
 				newNode.setNext(currentNode);
 			}
 			
@@ -41,7 +41,7 @@ public class LinkedList<T extends Comparable<T> & Serializable> {
 	}
 	
 	public Iterator<T> iter() {
-		ReverseIterator<T> iterator = new ReverseIterator<T>(tail);
+		ReverseIterator<T> iterator = new ReverseIterator<T>(head);
 		return iterator;
 	}
 }
