@@ -1,18 +1,19 @@
 package doubleLinkedList;
 
 import java.io.Serializable;
+import java.util.Iterator;
 
 public class LinkedList<T extends Comparable<T> & Serializable> {
 
 	/**	 */
 	private static final long serialVersionUID = 1L;
 
-	public LinkedListIterator<T> iter;
+	public ReverseIterator<T> iter;
 	private DoubleLinkNode<T> tail;
 
 	public LinkedList() {
 		this.tail = null;
-		this.iter = new LinkedListIterator<T>(tail);
+		this.iter = new ReverseIterator<T>(tail);
 	}
 
 	public void add(T data) {
@@ -37,5 +38,10 @@ public class LinkedList<T extends Comparable<T> & Serializable> {
 			}
 			
 		}
+	}
+	
+	public Iterator<T> iter() {
+		ReverseIterator<T> iterator = new ReverseIterator<T>(tail);
+		return iterator;
 	}
 }
