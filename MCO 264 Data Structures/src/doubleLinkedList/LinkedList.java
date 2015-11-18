@@ -26,19 +26,23 @@ public class LinkedList<T extends Comparable<T> & Serializable> {
 			DoubleLinkNode<T> newNode = new DoubleLinkNode<T>(data);
 			currentNode = head;
 			while(currentNode != null && data.compareTo(currentNode.getData()) > 0) {
-				currentNode.setPrev(currentNode);
-				currentNode = currentNode.getNext();
+				newNode.setNext(currentNode.getNext());
+				currentNode.setNext(newNode);
+				currentNode = newNode;
 			}
 			if (currentNode == head) {
 				newNode.setNext(head);
 				head = newNode;
 			} else {
-				currentNode.getPrev().setNext(newNode);
-				newNode.setNext(currentNode);
+				newNode.setNext(currentNode.getNext());
+				currentNode.setNext(newNode);
 			}
 			
 		}
 	}
+	
+	public T find() {}
+	public void remove(T data) {}
 	
 	public Iterator<T> iter() {
 		ReverseIterator<T> iterator = new ReverseIterator<T>(head);
