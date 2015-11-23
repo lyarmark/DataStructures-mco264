@@ -25,8 +25,11 @@ public class ReverseIterator<T extends Comparable<T> & Serializable> implements 
 	@Override
 	public T next() {
 		T data = current.getData();
-		current = current.next;
+		current = current.prev;
 		return data;
 	}
 
+	public void reset() {
+		this.current = tail;
+	}
 }
