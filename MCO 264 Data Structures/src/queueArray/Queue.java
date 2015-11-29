@@ -12,7 +12,7 @@ public class Queue<T> {
 
 	/*
 	 * circular queue rewrites over itself from the beginning when it gets to
-	 * the end need to keep track of the front and the back to pop and push.
+	 * the end. need to keep track of the front and the back to pop and push.
 	 * nothing is bumped from popping- only the pointers move finite amount of
 	 * space, which can be reused
 	 */

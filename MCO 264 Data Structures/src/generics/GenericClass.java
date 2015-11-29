@@ -12,19 +12,20 @@ public class GenericClass {
 
 	// this class is not generic of type <T>
 	// rather, it has a generic method
-	
+
 	// T means anything
-	
+
 	// <T> means every time you see this method, a type T will be defined, which
 	// extends comparable
-	
+
 	// it returns an object of type T (the greater one when you compare)
 	// and takes is 2 T parameters
-	
-	//this uses extends because it IS a comparable, by definition of implementing Comparable
-	//not that T itself implements Comparable, but T can be compared
-	
-		public <T extends Comparable<T>> T max(T val1, T val2) {
+
+	// this uses extends because it IS a comparable, by definition of
+	// implementing Comparable
+	// not that T itself implements Comparable, but T can be compared
+
+	public <T extends Comparable<T>> T max(T val1, T val2) {
 
 		int result = val1.compareTo(val2);
 
@@ -56,8 +57,9 @@ public class GenericClass {
 
 		Book a = new Book("Curious George", 20.0);
 		Book b = new Book("Amelia Bedila", 15.0);
-		
-		//need to ensure that books are comparable with implement. even if it already has a compareTo
+
+		// need to ensure that books are comparable with implement. even if it
+		// already has a compareTo
 		System.out.println(generic.max(a, b).toString());
 	}
 }
