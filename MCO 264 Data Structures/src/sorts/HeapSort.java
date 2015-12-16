@@ -20,7 +20,30 @@ public class HeapSort {
 	//top will always be biggest
 	
 	//find children:
-	//(index*2), (index*2 +1)	?fis this true?
+	//(index*2), (index*2 +1)	?is this true?
 	
+	//parent of an element = (index-1)/2
+	
+	//NEXT CLASS STARTED HERE
+	/*
+	 * a vector is like an arraylist
+	 * the Heap is a wrapper. the vector can only be used like a heap
+	 * like making a stack as a linkedList.
+	 * the linkedlist can only be used like a stack
+	 * 
+	 * a heap keeps track of:
+	 * number of elements = level we're up to
+	 * aka size = next position
+	 * and
+	 * last value entered
+	 * 
+	 * code needs to be general enough to work under almost any condition
+	 * 
+	 * 
+	 * after finish entering values into heap, need to sort the array.
+	 * the heap is not by definition sorted, it just makes it easier to sort
+	 * prereq is that heap is not sorted
+	 * because assume that first element is largest and ever parent is greater than children
+	 */
 	
 }
