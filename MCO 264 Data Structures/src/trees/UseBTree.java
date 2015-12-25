@@ -1,12 +1,14 @@
 package trees;
 
+import java.util.ArrayList;
+
 public class UseBTree {
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		BinaryTree<String> myData= new BinaryTree<String>();
+		BalancedBinaryTree<String> myData= new BalancedBinaryTree<String>();
 		/*myData.insert("corn");
 		myData.insert("potatoes");
 		myData.insert("apples");
@@ -28,10 +30,11 @@ public class UseBTree {
 		myData.insertRecur("L");
 		myData.insertRecur("U");
 		myData.insertRecur("W");
-		System.out.println("PreOrder");
-		myData.traversePreOrder();
+		//System.out.println("PreOrder");
+		//myData.traversePreOrder();
 		System.out.println("InOrder");
-		myData.traverse();
+		ArrayList<String> list = myData.traverseInOrder();
+		System.out.println(list);
 		myData.removeVal("D");
 		System.out.println("InOrder after deletion");
 		myData.traverse();
