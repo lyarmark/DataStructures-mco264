@@ -182,7 +182,7 @@ public class BinaryTree<T extends Comparable<T>> {
 	private BNode<T> removeData(BNode<T> tree) {
 		// case 1 and 2: subtree just has one child branch so return that
 		// branch and link that branch to previous
-		// part of tree, basically eliminating the      BNode
+		// part of tree, basically eliminating the BNode
 		// in which the data was found
 		if (tree.getLC() == null)
 			return tree.getRC();
@@ -241,7 +241,6 @@ public class BinaryTree<T extends Comparable<T>> {
 
 	private void traverseI(BNode<T> root) {
 		if (root == null)
-			//returns to the previous iteration it was doing of this method
 			return; // anchor case
 		traverseI(root.getLC());
 		System.out.println(root.getData());

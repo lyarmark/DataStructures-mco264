@@ -3,8 +3,6 @@ package trees;
 import java.io.Serializable;
 
 public class BNode<T extends Comparable<T> > implements Comparable<BNode<T>>,Serializable{
-	private static final long serialVersionUID = 1L;
-	
 	private T data;
 	private BNode<T> lc;    //link to left child
 	private BNode<T> rc;    //link to right child

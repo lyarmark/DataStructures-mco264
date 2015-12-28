@@ -1,6 +1,7 @@
-package trees;
+package balancedBinaryTree;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 public class BalancedBinaryTree<T extends Comparable<T>> {
@@ -9,104 +10,6 @@ public class BalancedBinaryTree<T extends Comparable<T>> {
 
 	public BalancedBinaryTree() {
 		root = null; // empty tree
-	}
-
-	public boolean insert(T data) {
-		BNode<T> curr = root;
-		BNode<T> parent = root;
-		BNode<T> newNode;
-		// iterative approach to inserting data
-		if (root == null) {
-			// nothing in tree yet
-			root = new BNode(data);
-		} else {
-			while (curr != null) {
-				if (data.compareTo(curr.getData()) < 0) {
-					// data is less than data in current Node
-					// go down left branch
-					parent = curr;
-					curr = curr.getLC();
-
-				} else if (data.compareTo(curr.getData()) > 0) {
-					// data is greater than data in current Node
-					// go down right branch
-					parent = curr;
-					curr = curr.getRC();
-
-				} else
-					return false; // duplicate value
-
-			}
-			// found the right place
-			newNode = new BNode<T>(data);
-			// should it be a left child or a right child?
-			if (newNode.compareTo(parent) < 0) {
-				parent.setLC(newNode);
-
-			} else
-				parent.setRC(newNode);
-
-		}
-		return true;
-
-	}
-
-	public void traverse() {
-		// using iterative approach
-
-		// iterative inOrder traversal of the BST – notice how much more
-		// complicated it is
-		// we maintain our own Stack in order to be able to retrace our steps
-		Stack<BNode<T>> stack = new Stack<BNode<T>>();
-		BNode<T> tree; // sub tree of the binary tree
-		if (root == null)
-			System.out.println("\n tree is empty");
-		tree = root;
-		stack.push(tree); // put root on the stack
-		// System.out.println( "\npushing " + tree.getData() +
-		// "onto the stack");
-		while (tree != null) { // go down the left branch,push the node on to
-								// the stack to be revisited
-			tree = tree.getLC();
-			while (tree != null) {
-				stack.push(tree);
-				// System.out.println( "\npushing " + tree.getData() +
-				// "onto the stack");
-				tree = tree.getLC();
-			}
-			// made it all the way down the leftmost branch
-			// pop the last node off the stack
-			if (!stack.empty()) {
-				tree = stack.pop();
-				// System.out.println("\npopped " + tree.getData() +
-				// "off the stack");
-				System.out.println(tree.getData()); // display the value at the
-													// current node
-
-			}
-
-			tree = tree.getRC(); // now start down the right branch of that node
-			if (tree != null)
-				stack.push(tree); // has a right branch so push it on the stack
-			else { // we are done processing this node, took care of left and
-					// right branches
-
-				while (!stack.empty() && tree == null) {
-					tree = stack.pop(); // get next node to complete processing
-					System.out.println(tree.getData()); // complete left branch,
-														// now write out the
-														// data
-					// System.out.println( "\npopped " + tree.getData() +
-					// "off the stack");
-					tree = tree.getRC(); // visit the right branch of this node
-
-				}
-				if (tree != null)
-					stack.push(tree); // push the right branch node onto the
-										// stack
-			}
-
-		} // end outer while
 	}
 
 	// recursive insert method
@@ -183,7 +86,7 @@ public class BalancedBinaryTree<T extends Comparable<T>> {
 	private BNode<T> removeData(BNode<T> tree) {
 		// case 1 and 2: subtree just has one child branch so return that
 		// branch and link that branch to previous
-		// part of tree, basically eliminating the      BNode
+		// part of tree, basically eliminating the BNode
 		// in which the data was found
 		if (tree.getLC() == null)
 			return tree.getRC();
@@ -217,33 +120,65 @@ public class BalancedBinaryTree<T extends Comparable<T>> {
 		return tree.getData();
 	}
 
+	public void traverseInOrder() {
+		ArrayList<BNode<T>> data = getSortedTree(this.root);
+		System.out.println(data.toString());
+	}
 
-	public ArrayList<T> traverseInOrder() {
-		ArrayList<T> data = new ArrayList<T>();
+	private ArrayList<BNode<T>> getSortedTree(BNode<T> root) {
+		ArrayList<BNode<T>> data = new ArrayList<BNode<T>>();
 		traverseI(root.getLC(), data);
+		data.add(root);
 		traverseI(root.getRC(), data);
-		
+
 		return data;
 	}
 
-	private void traverseI(BNode<T> root, ArrayList<T> data) {
+	private void traverseI(BNode<T> root, ArrayList<BNode<T>> data) {
 		if (root == null)
-			//returns to the previous iteration it was doing of this method
+			// returns to the previous iteration it was doing of this method
 			return; // anchor case
 		traverseI(root.getLC(), data);
-		data.add(root.getData());
+		data.add(root);
 		traverseI(root.getRC(), data);
 	}
 
-	public BalancedBinaryTree balanceTree() {
+	public void balanceTree() {
+		ArrayList<BNode<T>> data = getSortedTree(root);
 
-		/*
-		 * pseudocode
-		 * sort the tree
-		 * take the center node as the new root
-		 * work out from center on both sides to add children 
-		 */
-		ArrayList<T> data = new ArrayList<T>();
-		
+		root = data.get(data.size() / 2);
+		balanceBranch(data, root);
+	}
+
+	private void balanceBranch(List<BNode<T>> splitData, BNode<T> currentRoot) {
+		// currentRoot is set to 2nd quarter
+		// set left child with 1st quarter
+		double quarter1 = ((double) splitData.size()) / 4;
+
+		if (splitData.get((int) quarter1) != currentRoot) {
+			currentRoot.setLC(splitData.get((int) quarter1));
+		} else {
+			currentRoot.setLC(null);
+		}
+
+		// set right child to 3rd quarter
+		double quarter3 = (((double) splitData.size()) / 4) * 3;
+
+		if (splitData.get((int) quarter3) != currentRoot) {
+			currentRoot.setRC(splitData.get((int) quarter3));
+		} else {
+			currentRoot.setRC(null);
+		}
+
+		// only need recursive call if list has more than current root and
+		// children
+		if (splitData.size() > 3) {
+			// balance left
+			balanceBranch(splitData.subList(0, splitData.size() / 2), currentRoot.getLC());
+			// balance right
+			balanceBranch(splitData.subList((splitData.size() / 2) + 1, splitData.size()), currentRoot.getRC());
+		} else {
+			return;
+		}
 	}
 }
