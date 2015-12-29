@@ -146,37 +146,38 @@ public class BalancedBinaryTree<T extends Comparable<T>> {
 	public void balanceTree() {
 		ArrayList<BNode<T>> data = getSortedTree(root);
 
-		root = data.get(data.size() / 2);
-		balanceBranch(data, root);
+		int rootIndex = data.size() / 2;
+		root = data.get((int) rootIndex);
+		balanceBranch(data, root, rootIndex);
 	}
 
-	private void balanceBranch(List<BNode<T>> splitData, BNode<T> currentRoot) {
+	private void balanceBranch(List<BNode<T>> splitData, BNode<T> currentRoot, int middleIndex) {
 		// currentRoot is set to 2nd quarter
 		// set left child with 1st quarter
-		double quarter1 = ((double) splitData.size()) / 4;
-
-		if (splitData.get((int) quarter1) != currentRoot) {
-			currentRoot.setLC(splitData.get((int) quarter1));
+		int quarter1 = middleIndex/2;
+		if (splitData.get(quarter1) != currentRoot) {
+			currentRoot.setLC(splitData.get(quarter1));
 		} else {
 			currentRoot.setLC(null);
 		}
 
 		// set right child to 3rd quarter
-		double quarter3 = (((double) splitData.size()) / 4) * 3;
-
-		if (splitData.get((int) quarter3) != currentRoot) {
-			currentRoot.setRC(splitData.get((int) quarter3));
+		int quarter3 = middleIndex + (middleIndex - (quarter1));
+		if (splitData.size() > 2) {
+			currentRoot.setRC(splitData.get(quarter3));
 		} else {
 			currentRoot.setRC(null);
 		}
 
 		// only need recursive call if list has more than current root and
 		// children
+		// balance left
 		if (splitData.size() > 3) {
-			// balance left
-			balanceBranch(splitData.subList(0, splitData.size() / 2), currentRoot.getLC());
+			balanceBranch(splitData.subList(0, (middleIndex)), currentRoot.getLC(), quarter1);
 			// balance right
-			balanceBranch(splitData.subList((splitData.size() / 2) + 1, splitData.size()), currentRoot.getRC());
+			balanceBranch(splitData.subList(middleIndex+1, splitData.size()), currentRoot.getRC(), quarter3);
+				//	((int) (middleIndex+1), splitData.size()), currentRoot.getRC(),
+					//(splitData.size() - (middleIndex)) / 2);
 		} else {
 			return;
 		}
