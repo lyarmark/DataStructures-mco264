@@ -153,18 +153,28 @@ public class BalancedBinaryTree<T extends Comparable<T>> {
 
 	private void balanceBranch(List<BNode<T>> splitData, BNode<T> currentRoot, int middleIndex) {
 		// currentRoot is set to 2nd quarter
+
 		// set left child with 1st quarter
-		int quarter1 = middleIndex/2;
-		if (splitData.get(quarter1) != currentRoot) {
-			currentRoot.setLC(splitData.get(quarter1));
+		int half1 = middleIndex / 2; // mid of 2nd 1/2, starting count at 0
+
+		if (splitData.get(half1) != currentRoot) {
+			currentRoot.setLC(splitData.get(half1));
+			currentRoot.getLC().setLC(null);
+			currentRoot.getLC().setRC(null);
+
 		} else {
 			currentRoot.setLC(null);
 		}
 
 		// set right child to 3rd quarter
-		int quarter3 = middleIndex + (middleIndex - (quarter1));
-		if (splitData.size() > 2) {
+		int half2 = (splitData.size() - (middleIndex + 1)) / 2;
+		int quarter3 = middleIndex + 1 + half2; // size of 2nd half /2
+
+		if (splitData.get(splitData.size() - 1) != currentRoot) {
 			currentRoot.setRC(splitData.get(quarter3));
+			currentRoot.getRC().setLC(null);
+			currentRoot.getRC().setRC(null);
+
 		} else {
 			currentRoot.setRC(null);
 		}
@@ -173,11 +183,11 @@ public class BalancedBinaryTree<T extends Comparable<T>> {
 		// children
 		// balance left
 		if (splitData.size() > 3) {
-			balanceBranch(splitData.subList(0, (middleIndex)), currentRoot.getLC(), quarter1);
+
+			balanceBranch(splitData.subList(0, (middleIndex)), currentRoot.getLC(), half1);
 			// balance right
-			balanceBranch(splitData.subList(middleIndex+1, splitData.size()), currentRoot.getRC(), quarter3);
-				//	((int) (middleIndex+1), splitData.size()), currentRoot.getRC(),
-					//(splitData.size() - (middleIndex)) / 2);
+			balanceBranch(splitData.subList(middleIndex + 1, splitData.size()), currentRoot.getRC(), half2);
+
 		} else {
 			return;
 		}
