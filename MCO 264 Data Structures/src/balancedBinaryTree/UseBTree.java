@@ -9,12 +9,7 @@ public class UseBTree {
 	 */
 	public static void main(String[] args) {
 		BalancedBinaryTree<String> myData = new BalancedBinaryTree<String>();
-		/*
-		 * myData.insert("corn"); myData.insert("potatoes");
-		 * myData.insert("apples"); myData.insert("carrots");
-		 * myData.insert("stringbeans"); myData.insert("squash");
-		 * myData.insert("onions"); System.out.println("PreOrder");
-		 */
+
 		myData.insertRecur("F");
 		myData.insertRecur("D");
 		myData.insertRecur("Z");
@@ -29,17 +24,38 @@ public class UseBTree {
 		myData.insertRecur("U");
 		myData.insertRecur("W");
 
-		System.out.println("InOrder");
-		myData.traverseInOrder();
-		myData.balanceTree();
+		System.out.println("traverse InOrder");
 		myData.traverseInOrder();
 
+		System.out.println("\ntraverse PreOrder");
+		myData.traversePreOrder();
+
+		System.out.println("\nBalancing ...");
+		myData.balanceTree();
+
+		System.out.println("traverse InOrder");
+		myData.traverseInOrder();
+
+		System.out.println("\ntraverse PreOrder");
+		myData.traversePreOrder();
+
+		System.out.println("\nGet existing data");
+		System.out.println(myData.get("D"));
+
+		System.out.println("Removing data ...");
 		myData.removeVal("D");
+
+		System.out.println("Get non existent data");
+		System.out.println(myData.get("D"));
+
+		System.out.println("\nBalancing again");
+		myData.balanceTree();
+
+		System.out.println("traverse InOrder");
 		myData.traverseInOrder();
 
-		System.out.println("Balanced");
-		myData.balanceTree();
-		myData.traverseInOrder();
+		System.out.println("\ntraverse PreOrder");
+		myData.traversePreOrder();
 	}
 
 }
