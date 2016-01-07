@@ -1,4 +1,4 @@
-package pharmacy;
+package billOrganizer;
 
 public class InvalidDataException extends Exception{
 	public InvalidDataException() {

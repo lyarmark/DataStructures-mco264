@@ -1,10 +1,7 @@
 package billOrganizer;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.GregorianCalendar;
-import java.util.Scanner;
 
 public class Bill implements Comparable<Bill>, Serializable {
 	private static final long serialVersionUID = 1L;
@@ -16,9 +13,14 @@ public class Bill implements Comparable<Bill>, Serializable {
 	private GregorianCalendar dueDate;
 	private BillType billType;
 
-	public Bill(String vendor, double amountDue, GregorianCalendar dueDate, BillType billType) {
+	public Bill(String vendor, double amountDue, GregorianCalendar dueDate, BillType billType) throws InvalidDataException {
+		if (vendor == null || vendor == ""
+				|| amountDue <=0 || dueDate == null|| billType == null) {
+			throw new InvalidDataException();
+		}
+
 		this.billID = ++lastID;
-		this.vendor = vendor;
+		this.vendor = vendor.toUpperCase();
 		this.amountDue = amountDue;
 		this.dueDate = dueDate;
 		this.billType = billType;

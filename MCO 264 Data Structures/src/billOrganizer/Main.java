@@ -3,7 +3,7 @@ package billOrganizer;
 public class Main {
 
 	public static void main(String[] args) {
-		BillMenuJFrame jFrame = new BillMenuJFrame();
+		JFrameMenu jFrame = new JFrameMenu();
 		jFrame.setVisible(true);
 	}
 

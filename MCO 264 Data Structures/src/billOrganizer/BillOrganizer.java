@@ -1,12 +1,19 @@
 package billOrganizer;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Scanner;
 
-public class BillOrganizer {
+public class BillOrganizer implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private ArrayList<PriorityQueue<Bill>> queues;
 	private SortedLinkedList<Bill> sortedBills;
@@ -19,7 +26,7 @@ public class BillOrganizer {
 		queues.add(new PriorityQueue<Bill>(BillCriteria.BILLTYPE));
 	}
 
-	public BillOrganizer(String billTextFile) throws FileNotFoundException {
+	public BillOrganizer(String billTextFile) throws FileNotFoundException, DuplicateDataException, NotFoundException {
 		File file = new File(billTextFile);
 		Scanner fileReader = new Scanner(file);
 		while (fileReader.hasNext()) {
@@ -29,13 +36,21 @@ public class BillOrganizer {
 				pq.enqueue(bill);
 			}
 		}
+	}
 
+	public BillOrganizer(File fileName) throws IOException, ClassNotFoundException {
+		FileInputStream fis = new FileInputStream(fileName);
+		ObjectInputStream in = new ObjectInputStream(fis);
+		this.sortedBills = (SortedLinkedList<Bill>) in.readObject();
+		in.close();
+		LinkedListIterator<Bill> iter = new LinkedListIterator<Bill>(sortedBills.head);
+		while (iter.hasNext()) {
+			this.insert(iter.next());
+		}
 	}
 
 	public void insert(Bill bill) {
 		for (PriorityQueue<Bill> pq : this.queues) {
-			// INSERT NEEDS TO SORT
-			// COMMENT ALL CLASSES BASED ON SPEC
 			pq.enqueue(bill);
 		}
 	}
@@ -58,10 +73,10 @@ public class BillOrganizer {
 	}
 
 	public void paySpecificBill(int billID) {
-		//DO SOMETHING
+		// DO SOMETHING
 	}
 
-	public Bill readBill(File billTextFile, Scanner readFile) {
+	public Bill readBill(File billTextFile, Scanner readFile) throws NotFoundException {
 		// assumes each entry is stored on one line
 
 		String vendor = readFile.next();
@@ -71,7 +86,7 @@ public class BillOrganizer {
 				Integer.parseInt(date[1]));
 
 		String type = readFile.nextLine();
-		BillType billType = Validations.validateBillType();
+		BillType billType = StaticMethods.validateBillType(type);
 
 		Bill bill = new Bill(vendor, amountDue, dueDate, billType);
 		return bill;
@@ -96,6 +111,13 @@ public class BillOrganizer {
 
 	public LinkedListIterator<Bill> iteratorByType() {
 		return new LinkedListIterator<Bill>(queues.get(2).getList().head);
+	}
+
+	public void closeOrganizer() throws IOException {
+		File outputFile = new File("bills.ser");
+		FileOutputStream fos = new FileOutputStream(outputFile);
+		ObjectOutputStream out = new ObjectOutputStream(fos);
+		out.writeObject(sortedBills);
 	}
 
 	public String toString() {

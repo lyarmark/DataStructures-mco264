@@ -9,7 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 
-public class BillMenuJFrame extends JFrame {
+public class JFrameMenu extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
@@ -17,7 +17,7 @@ public class BillMenuJFrame extends JFrame {
 	JList<String> menu;
 	DefaultListModel<String> model;
 
-	public BillMenuJFrame() {
+	public JFrameMenu() {
 		setTitle("Bill Organizer Menu");
 		setSize(300, 400);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -35,13 +35,7 @@ public class BillMenuJFrame extends JFrame {
 		menu.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				if (me.getClickCount() == 2) {
-					int click = menu.getSelectedIndex();
-					try {
-						driver.doSomething(menu.getSelectedIndex());
-					} catch (ListEmptyException | NotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					driver.doSomething(menu.getSelectedIndex());
 				}
 			}
 		});
