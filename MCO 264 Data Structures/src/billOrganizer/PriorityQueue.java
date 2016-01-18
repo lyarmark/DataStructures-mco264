@@ -8,6 +8,7 @@ public class PriorityQueue<T extends Serializable & Comparable<T>> {
 	private Comparator<T> comparator;
 
 	public PriorityQueue(BillCriteria criteria) {
+		this.list = new SortedLinkedList<T>();
 		this.setComparatorType(criteria);
 	}
 
@@ -15,10 +16,14 @@ public class PriorityQueue<T extends Serializable & Comparable<T>> {
 		list.insert(data, this.comparator);
 	}
 
-	public Node<T> dequeue() throws ListEmptyException, NotFoundException {
+	public T dequeue() throws ListEmptyException, NotFoundException {
 		Node<T> head = this.list.head;
-		this.list.remove(head.getData());
-		return head;
+		if (head != null) {
+			this.list.remove(head.getData());
+			return head.getData();
+		} else {
+			throw new ListEmptyException();
+		}
 	}
 
 	public Node<T> peek() {

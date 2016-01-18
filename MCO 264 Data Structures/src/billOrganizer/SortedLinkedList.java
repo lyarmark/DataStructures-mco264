@@ -10,17 +10,24 @@ public class SortedLinkedList<T extends Serializable & Comparable<T>> extends Li
 	@Override
 	public void insert(T data) throws DuplicateDataException {
 		Node<T> newNode = new Node<T>(data);
-		if (this.head == null) {
+		// newNode is head
+		if (this.head == null || data.compareTo(head.getData()) < 0) {
+			newNode.setNext(head);
 			this.head = newNode;
 		} else {
 			Node<T> previous, current;
 			previous = current = this.head;
-			while (current.getNext() != null) {
+			while (current != null) {
+				// newNode is =
 				if (data.compareTo(current.getData()) == 0) {
 					throw new DuplicateDataException();
-				} else if (data.compareTo(current.getData()) > 0) {
+					// newNode is greater
+				} else if (data.compareTo(current.getData()) < 0) {
 					newNode.setNext(current);
 					previous.setNext(newNode);
+				} else if (current.getNext() == null) {
+					current.setNext(newNode);
+					current = newNode.getNext();
 				} else {
 					previous = current;
 					current = current.getNext();
@@ -31,16 +38,26 @@ public class SortedLinkedList<T extends Serializable & Comparable<T>> extends Li
 
 	public void insert(T data, Comparator<T> comparator) {
 		Node<T> newNode = new Node<T>(data);
-		if (this.head == null) {
+		if (this.head == null || comparator.compare(data, head.getData()) <= 0) {
+			newNode.setNext(head);
 			this.head = newNode;
-		}
-		Node<T> previous, current;
-		previous = current = this.head;
-		while (current.getData() != null) {
-			if (comparator.compare(data, current.getData()) > 0) {
-				newNode.setNext(current);
-				previous.setNext(newNode);
+		} else {
+			Node<T> previous, current;
+			previous = current = this.head;
+			while (current != null) {
+				if (comparator.compare(data, current.getData()) < 0) {
+					newNode.setNext(current);
+					previous.setNext(newNode);
+					current = null; // data has been inserted
+				} else if (current.getNext() == null) {
+					current.setNext(newNode);
+					current = null; // data has been inserted
+				} else {
+					previous = current;
+					current = current.getNext();
+				}
 			}
+
 		}
 	}
 

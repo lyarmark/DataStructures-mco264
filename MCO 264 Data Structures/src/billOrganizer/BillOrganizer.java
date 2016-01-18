@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.Scanner;
 
@@ -26,7 +28,8 @@ public class BillOrganizer implements Serializable {
 		queues.add(new PriorityQueue<Bill>(BillCriteria.BILLTYPE));
 	}
 
-	public BillOrganizer(String billTextFile) throws FileNotFoundException, DuplicateDataException, NotFoundException {
+	public BillOrganizer(String billTextFile) throws FileNotFoundException, DuplicateDataException, NotFoundException,
+			InvalidDataException {
 		File file = new File(billTextFile);
 		Scanner fileReader = new Scanner(file);
 		while (fileReader.hasNext()) {
@@ -38,7 +41,7 @@ public class BillOrganizer implements Serializable {
 		}
 	}
 
-	public BillOrganizer(File fileName) throws IOException, ClassNotFoundException {
+	public BillOrganizer(File fileName) throws IOException, ClassNotFoundException, DuplicateDataException {
 		FileInputStream fis = new FileInputStream(fileName);
 		ObjectInputStream in = new ObjectInputStream(fis);
 		this.sortedBills = (SortedLinkedList<Bill>) in.readObject();
@@ -49,34 +52,56 @@ public class BillOrganizer implements Serializable {
 		}
 	}
 
-	public void insert(Bill bill) {
+	public void insert(Bill bill) throws DuplicateDataException {
+		this.sortedBills.insert(bill);
 		for (PriorityQueue<Bill> pq : this.queues) {
 			pq.enqueue(bill);
 		}
 	}
 
-	public void payNextBill(Bill bill, BillCriteria criteria) throws ListEmptyException, NotFoundException {
+	public void payNextBill(BillCriteria criteria) throws ListEmptyException, NotFoundException {
 		if (criteria.equals(BillCriteria.BILLDUEDATE)) {
-			queues.get(0).dequeue();
+			Bill bill = queues.get(0).dequeue();
 			queues.get(1).remove(bill);
 			queues.get(2).remove(bill);
+			sortedBills.remove(bill);
 		} else if (criteria.equals(BillCriteria.BILLAMOUNT)) {
-			queues.get(1).dequeue();
+			Bill bill = queues.get(1).dequeue();
 			queues.get(0).remove(bill);
 			queues.get(2).remove(bill);
+			sortedBills.remove(bill);
 		} else if (criteria.equals(BillCriteria.BILLTYPE)) {
-			queues.get(2).dequeue();
+			Bill bill = queues.get(2).dequeue();
 			queues.get(0).remove(bill);
 			queues.get(1).remove(bill);
+			sortedBills.remove(bill);
 		}
-		sortedBills.remove(bill);
 	}
 
-	public void paySpecificBill(int billID) {
-		// DO SOMETHING
+	public void paySpecificBill(int billID) throws ListEmptyException, NotFoundException {
+		LinkedListIterator<Bill> iter = new LinkedListIterator<Bill>(sortedBills.head);
+		Bill bill = null;
+		boolean found = false;
+		if (iter.hasNext()) {
+			while (iter.hasNext()) {
+				bill = iter.next();
+				if (bill.getBillID().equals(billID)) {
+					sortedBills.remove(bill);
+					for (PriorityQueue<Bill> pq : queues) {
+						pq.remove(bill);
+					}
+					found = true;
+				}
+			}
+			if (!found) {
+				throw new NotFoundException();
+			}
+		} else {
+			throw new ListEmptyException();
+		}
 	}
 
-	public Bill readBill(File billTextFile, Scanner readFile) throws NotFoundException {
+	public Bill readBill(File billTextFile, Scanner readFile) throws NotFoundException, InvalidDataException {
 		// assumes each entry is stored on one line
 
 		String vendor = readFile.next();
@@ -118,6 +143,7 @@ public class BillOrganizer implements Serializable {
 		FileOutputStream fos = new FileOutputStream(outputFile);
 		ObjectOutputStream out = new ObjectOutputStream(fos);
 		out.writeObject(sortedBills);
+		out.close();
 	}
 
 	public String toString() {
@@ -139,8 +165,12 @@ public class BillOrganizer implements Serializable {
 			iter = iteratorByType();
 		}
 		StringBuilder builder = new StringBuilder();
-		while (iter.hasNext()) {
-			builder.append(iter.next().toString());
+		if (iter.hasNext()) {
+			while (iter.hasNext()) {
+				builder.append(iter.next().toString());
+			}
+		} else {
+			builder.append("There are currently no unpaid bills in your organizer.");
 		}
 		return builder.toString();
 	}

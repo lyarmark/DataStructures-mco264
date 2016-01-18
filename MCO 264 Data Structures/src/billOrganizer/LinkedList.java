@@ -111,7 +111,6 @@ public class LinkedList<T extends Serializable & Comparable<T>> implements Seria
 
 		public LinkedListInternalIterator() {
 			currentNode = head;
-
 		}
 
 		public boolean hasNext() {

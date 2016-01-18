@@ -7,6 +7,7 @@ import java.util.GregorianCalendar;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -22,11 +23,9 @@ public class JFrameAddBill extends JFrame {
 	private JTextField vendorText;
 	private JTextField amountDueText;
 	private JTextField dueDateText;
-	private JTextField billTypeText;
+	private JComboBox<BillType> choices;
 
 	private JButton doneButton;
-
-	private Bill bill;
 
 	public JFrameAddBill() {
 		setTitle("ADD A BILL");
@@ -39,35 +38,15 @@ public class JFrameAddBill extends JFrame {
 		this.amountDueLabel = new JLabel("Enter the amount due");
 		this.dueDateLabel = new JLabel("Enter the due date");
 
-		// MAKE THIS A COMBO BOX
 		this.billTypeLabel = new JLabel("Enter the bill type");
+		this.choices = new JComboBox<BillType>(BillType.values());
+		this.choices.setSelectedIndex(-1);
 
 		this.vendorText = new JTextField();
 		this.amountDueText = new JTextField();
 		this.dueDateText = new JTextField();
-		this.billTypeText = new JTextField();
 
 		this.doneButton = new JButton("ENTER BILL");
-
-		this.doneButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String vendor = vendorText.getText();
-				double amountDue = Double.parseDouble(amountDueText.getText());
-
-				String dueDate = dueDateText.getText();
-				GregorianCalendar date = StaticMethods.convertStringToDate(dueDate);
-
-				String billType = billTypeText.getText();
-				BillType type = StaticMethods.validateBillType(billType);
-				try {
-					addBill(vendor, amountDue, date, type);
-				} catch (InvalidDataException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
 
 		add(vendorLabel);
 		add(vendorText);
@@ -76,25 +55,24 @@ public class JFrameAddBill extends JFrame {
 		add(dueDateLabel);
 		add(dueDateText);
 		add(billTypeLabel);
-		add(billTypeText);
+		add(choices);
 		add(doneButton);
 
 		getContentPane();
 	}
 
-	private void addBill(String vendor, double amountDue, GregorianCalendar dueDate, BillType billType)
-			throws InvalidDataException {
-		this.bill = new Bill(vendor, amountDue, dueDate, billType);
+	public Bill addBill() throws InvalidDataException {
+		String vendor = vendorText.getText();
+		double amountDue = Double.parseDouble(amountDueText.getText());
+
+		String dueDate = dueDateText.getText();
+		GregorianCalendar date = StaticMethods.convertStringToDate(dueDate);
+
+		Object[] type = choices.getSelectedObjects();
+		return new Bill(vendor, amountDue, date, (BillType) type[0]);
 	}
 
-	public Bill getBillInfo() {
-		return this.bill;
-	}
-
-	public boolean buttonClick() {
-		return doneButton.isSelected();
-		/*
-		 * if (this.bill == null) { return false; } return true;
-		 */
+	public JButton getDoneButton() {
+		return this.doneButton;
 	}
 }

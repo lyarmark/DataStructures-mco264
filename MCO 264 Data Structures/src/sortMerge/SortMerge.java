@@ -71,7 +71,7 @@ public class SortMerge {
 	private static void sortMerge(File file1, File file2, ArrayList<File> files) throws FileNotFoundException {
 		Scanner read1 = new Scanner(file1);
 		Scanner read2 = new Scanner(file2);
-		File mergedSort = new File(file1.getName() + file2.getName());
+		File mergedSort = new File("sortedFiles" + files.size() + ".txt");
 		PrintWriter writeMerge = new PrintWriter(mergedSort);
 
 		Integer a = read1.nextInt();
