@@ -8,13 +8,9 @@ public class LinkedList<T extends Serializable & Comparable<T>> implements Seria
 	 */
 	private static final long serialVersionUID = 1826782479863723174L;
 	protected Node<T> head;
-	public LinkedListInternalIterator iter; // internal iterator, only one per
-											// class instance
 
-	// empty linked list
 	public LinkedList() {
 		head = null;
-		iter = new LinkedListInternalIterator();
 	}
 
 	// insert data at the beginning
@@ -64,7 +60,7 @@ public class LinkedList<T extends Serializable & Comparable<T>> implements Seria
 				}
 
 			}
-			// exhausted list, didn't find a match
+			// done list, didn't find a match
 			throw new NotFoundException();
 		}
 
@@ -75,12 +71,10 @@ public class LinkedList<T extends Serializable & Comparable<T>> implements Seria
 	}
 
 	public Node<T> getFirst() {
-		// return first Node in the list
 		return head;
 	}
 
 	public boolean isEmpty() {
-		// is list empty
 		return (head == null);
 	}
 
@@ -98,44 +92,8 @@ public class LinkedList<T extends Serializable & Comparable<T>> implements Seria
 		return info;
 	}
 
-	// will return reference to external iterator, one instance can have many
-	// external iterators
 	public LinkedListIterator<T> iterator() {
 		return new LinkedListIterator<T>(head);
 	}
 
-	// this class gives provides the internal iterator with its functionality
-
-	class LinkedListInternalIterator {
-		private Node<T> currentNode;
-
-		public LinkedListInternalIterator() {
-			currentNode = head;
-		}
-
-		public boolean hasNext() {
-			// is there more data to peruse
-			if (currentNode == null) {
-				return false;
-			}
-			if (currentNode.getData() != null) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-
-		public T next() {
-			Node<T> temp = currentNode;
-			currentNode = currentNode.getNext();// move further along in the
-												// list
-			// return the currentNode before you moved further along
-			return temp.getData();
-		}
-
-		public void reset() {
-			// resets from the beginning of the list , starts all over again
-			currentNode = head;
-		}
-	}
 }

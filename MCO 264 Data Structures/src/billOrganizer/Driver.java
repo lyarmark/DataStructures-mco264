@@ -2,15 +2,17 @@ package billOrganizer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.GregorianCalendar;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
+import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 public class Driver {
 	private String[] options;
@@ -19,6 +21,10 @@ public class Driver {
 	BillOrganizer organizer;
 
 	public Driver(JList<String> jlist, DefaultListModel<String> model) {
+		// automatically need to start with an organizer before you can do
+		// anything
+		// if user wants to open a saved organizer, the instance variable will
+		// be reset.
 		organizer = new BillOrganizer();
 
 		options = new String[9];
@@ -43,7 +49,7 @@ public class Driver {
 		this.jlist.setModel(model);
 	}
 
-	public void doSomething(int selectedIndex) {
+	public void doSomething(int selectedIndex, JFrameMenu menu) {
 		switch (selectedIndex) {
 		// Add a bill
 		case 0: {
@@ -58,53 +64,26 @@ public class Driver {
 		}
 		// View bills sorted by date
 		case 2: {
-			// String[] text =
-			// organizer.toStringByCriteria(BillCriteria.BILLDUEDATE);
-
-			// JList<String> list = new JList<String>();
-			// DefaultListModel<String> model = new DefaultListModel<String>();
-
-			// for (String s : text) {
-			// model.addElement(s);
-			// }
-
-			// list.setModel(model);
-			// JPanel panel = new JPanel();
-			// panel.add(list);
-			// JOptionPane.showMessageDialog(null, panel);
-
-			System.out.println(organizer.toStringByCriteria(BillCriteria.BILLDUEDATE));
+			LinkedListIterator<Bill> iter = organizer.iteratorByDate();
+			viewSortedBills(iter);
 			break;
 		}
 		// View bills sorted by amount
 		case 3: {
-			System.out.println(organizer.toStringByCriteria(BillCriteria.BILLAMOUNT));
+			LinkedListIterator<Bill> iter = organizer.iteratorByAmount();
+			viewSortedBills(iter);
 			break;
 		}
-
 		// View bills sorted by type
 		case 4: {
-			JComboBox<BillCriteria> box = new JComboBox<BillCriteria>(BillCriteria.values());
-			JOptionPane.showInputDialog(new JComboBox<BillCriteria>(), "View bills sorted by:", "View sorted bills",
-					JOptionPane.QUESTION_MESSAGE, null, BillCriteria.values(), -1);
-			Object[] criteria = box.getSelectedObjects();
-			System.out.println(organizer.toStringByCriteria(BillCriteria.BILLTYPE));
-
-			System.out.println(organizer.toStringByCriteria(BillCriteria.BILLTYPE));
+			LinkedListIterator<Bill> iter = organizer.iteratorByType();
+			viewSortedBills(iter);
 			break;
 		}
 
 		// Pay next bill due
 		case 5: {
-			JComboBox<BillCriteria> box = new JComboBox<BillCriteria>(BillCriteria.values());
-			JOptionPane.showInputDialog(new JComboBox<BillCriteria>(), "Pay next bill by criteria", "Pay next bill",
-					JOptionPane.QUESTION_MESSAGE, null, BillCriteria.values(), -1);
-			Object[] criteria = box.getSelectedObjects();
-			try {
-				organizer.payNextBill((BillCriteria) criteria[0]);
-			} catch (ListEmptyException | NotFoundException e) {
-				catchException(e);
-			}
+			case5();
 			break;
 		}
 
@@ -118,13 +97,24 @@ public class Driver {
 			}
 			break;
 		}
-		/*
-		 * // Save bill organizer case 9: {
-		 * 
-		 * break; }
-		 */
+		// Save bill organizer
+		case 7: {
+			try {
+				JOptionPane.showMessageDialog(null, "Saving and exiting ... Have a nice day!");
+				organizer.closeOrganizer();
+				// close the window and program
+				menu.dispatchEvent(new WindowEvent(menu, WindowEvent.WINDOW_CLOSING));
+			} catch (IOException e) {
+				e.printStackTrace();
+				// JOptionPane.showMessageDialog(null, "File not found");
+			}
+			break;
+		}
 		// Restore bill organizer
-
+		case 8: {
+			case8();
+			break;
+		}
 		}
 	}
 
@@ -149,31 +139,47 @@ public class Driver {
 	private void case1() {
 		double total = organizer.totalBills();
 		DecimalFormat format = new DecimalFormat("$#,###,###,###,###0.00");
-		JOptionPane.showMessageDialog(null, format.format(total));
-	}
-
-	private void case2() {
-	}
-
-	private void case3() {
-	}
-
-	private void case4() {
+		JOptionPane.showMessageDialog(null, format.format(total), "Total bills", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	private void case5() {
-	}
-
-	private void case6() {
-	}
-
-	private void case7() {
+		JComboBox<BillCriteria> box = new JComboBox<BillCriteria>(BillCriteria.values());
+		JOptionPane.showInputDialog(box, "Pay next bill by criteria", "Pay next bill", JOptionPane.QUESTION_MESSAGE,
+				null, BillCriteria.values(), null);
+		// box.setSelectedIndex(-1);
+		Object[] criteria = box.getSelectedObjects();
+		try {
+			organizer.payNextBill((BillCriteria) criteria[0]);
+		} catch (ListEmptyException | NotFoundException e) {
+			catchException(e);
+		}
 	}
 
 	private void case8() {
+		JFileChooser fileChooser = new JFileChooser();
+
+		JOptionPane.showMessageDialog(null, "choose data file");
+		fileChooser.showOpenDialog(null);
+		File file = fileChooser.getSelectedFile();
+
+		try {
+			organizer = new BillOrganizer(file);
+		} catch (ClassNotFoundException | IOException | DuplicateDataException e) {
+			catchException(e);
+		}
 	}
 
-	private void case9() {
+	private void viewSortedBills(LinkedListIterator<Bill> iter) {
+		JTextArea list = new JTextArea();
+
+		if (iter.hasNext()) {
+			while (iter.hasNext()) {
+				list.append(iter.next().toString());
+			}
+		} else {
+			list.setText("There are currently no bills in your organizer");
+		}
+		JOptionPane.showMessageDialog(null, list);
 	}
 
 	private void catchException(Exception e) {

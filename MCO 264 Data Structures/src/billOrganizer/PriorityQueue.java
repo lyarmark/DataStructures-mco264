@@ -35,12 +35,19 @@ public class PriorityQueue<T extends Serializable & Comparable<T>> {
 	}
 
 	private void setComparatorType(BillCriteria criteria) {
-		if (criteria.equals(BillCriteria.BILLAMOUNT)) {
+		switch (criteria) {
+		case BILLAMOUNT: {
 			this.comparator = (Comparator<T>) new ComparatorBillAmount();
-		} else if (criteria.equals(BillCriteria.BILLDUEDATE)) {
+			break;
+		}
+		case BILLDUEDATE: {
 			this.comparator = (Comparator<T>) new ComparatorBillDate();
-		} else if (criteria.equals(BillCriteria.BILLTYPE)) {
+			break;
+		}
+		case BILLTYPE: {
 			this.comparator = (Comparator<T>) new ComparatorBillType();
+			break;
+		}
 		}
 	}
 

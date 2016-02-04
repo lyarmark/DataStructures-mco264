@@ -1,11 +1,8 @@
 package billOrganizer;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.GregorianCalendar;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
@@ -38,12 +35,16 @@ public class JFrameMenu extends JFrame {
 		menu.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				if (me.getClickCount() == 2) {
-					driver.doSomething(menu.getSelectedIndex());
+					doSomething(menu.getSelectedIndex());
 				}
 			}
 		});
 
 		add(menu, BorderLayout.CENTER);
 		getContentPane();
+	}
+
+	private void doSomething(int index) {
+		driver.doSomething(index, this);
 	}
 }

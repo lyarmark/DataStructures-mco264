@@ -2,7 +2,7 @@ package billOrganizer;
 
 import java.io.Serializable;
 
-public class Node<T extends Serializable & Comparable<T>> implements Serializable {
+public class Node<T extends Comparable<T>> implements Serializable {
 	/**
 	 * 
 	 */

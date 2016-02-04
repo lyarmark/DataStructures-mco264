@@ -8,9 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.Scanner;
 
@@ -28,27 +26,30 @@ public class BillOrganizer implements Serializable {
 		queues.add(new PriorityQueue<Bill>(BillCriteria.BILLTYPE));
 	}
 
+	// this is not used
 	public BillOrganizer(String billTextFile) throws FileNotFoundException, DuplicateDataException, NotFoundException,
 			InvalidDataException {
+		this();
 		File file = new File(billTextFile);
 		Scanner fileReader = new Scanner(file);
 		while (fileReader.hasNext()) {
 			Bill bill = readBill(file, fileReader);
-			sortedBills.insert(bill);
-			for (PriorityQueue<Bill> pq : this.queues) {
-				pq.enqueue(bill);
-			}
+			this.insert(bill);
 		}
 	}
 
 	public BillOrganizer(File fileName) throws IOException, ClassNotFoundException, DuplicateDataException {
+		this();
 		FileInputStream fis = new FileInputStream(fileName);
 		ObjectInputStream in = new ObjectInputStream(fis);
 		this.sortedBills = (SortedLinkedList<Bill>) in.readObject();
 		in.close();
 		LinkedListIterator<Bill> iter = new LinkedListIterator<Bill>(sortedBills.head);
 		while (iter.hasNext()) {
-			this.insert(iter.next());
+			Bill bill = iter.next();
+			for (PriorityQueue<Bill> pq : this.queues) {
+				pq.enqueue(bill);
+			}
 		}
 	}
 
@@ -60,6 +61,8 @@ public class BillOrganizer implements Serializable {
 	}
 
 	public void payNextBill(BillCriteria criteria) throws ListEmptyException, NotFoundException {
+		// if more criteria are added, should probably change this to a loop
+		// instead of removing explicitly from each
 		if (criteria.equals(BillCriteria.BILLDUEDATE)) {
 			Bill bill = queues.get(0).dequeue();
 			queues.get(1).remove(bill);
@@ -139,9 +142,7 @@ public class BillOrganizer implements Serializable {
 	}
 
 	public void closeOrganizer() throws IOException {
-		File outputFile = new File("bills.ser");
-		FileOutputStream fos = new FileOutputStream(outputFile);
-		ObjectOutputStream out = new ObjectOutputStream(fos);
+		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("bills.ser"));
 		out.writeObject(sortedBills);
 		out.close();
 	}
@@ -151,26 +152,6 @@ public class BillOrganizer implements Serializable {
 		StringBuilder builder = new StringBuilder();
 		while (iter.hasNext()) {
 			builder.append(iter.next().toString());
-		}
-		return builder.toString();
-	}
-
-	public String toStringByCriteria(BillCriteria criteria) {
-		LinkedListIterator<Bill> iter = null;
-		if (criteria.equals(BillCriteria.BILLDUEDATE)) {
-			iter = iteratorByDate();
-		} else if (criteria.equals(BillCriteria.BILLAMOUNT)) {
-			iter = iteratorByAmount();
-		} else if (criteria.equals(BillCriteria.BILLTYPE)) {
-			iter = iteratorByType();
-		}
-		StringBuilder builder = new StringBuilder();
-		if (iter.hasNext()) {
-			while (iter.hasNext()) {
-				builder.append(iter.next().toString());
-			}
-		} else {
-			builder.append("There are currently no unpaid bills in your organizer.");
 		}
 		return builder.toString();
 	}

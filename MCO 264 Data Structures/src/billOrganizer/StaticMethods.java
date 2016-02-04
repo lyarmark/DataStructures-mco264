@@ -13,15 +13,6 @@ public class StaticMethods {
 		return null;
 	}
 
-	public static BillCriteria validateBillCriteria(String criteria) {
-		for (BillCriteria c : BillCriteria.values()) {
-			if (criteria.equalsIgnoreCase(c.toString())) {
-				return c;
-			}
-		}
-		return null;
-	}
-
 	public static GregorianCalendar convertStringToDate(String dateString) {
 		String[] split = dateString.split("/");
 		GregorianCalendar date = new GregorianCalendar(Integer.parseInt(split[2]), Integer.parseInt(split[0]),
